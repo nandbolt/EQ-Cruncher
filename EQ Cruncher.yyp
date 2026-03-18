@@ -13,6 +13,7 @@
     {"$GMFolder":"","%Name":"nb extensions","folderPath":"folders/nb extensions.yy","name":"nb extensions","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"data structures","folderPath":"folders/nb extensions/data structures.yy","name":"data structures","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"trees","folderPath":"folders/nb extensions/data structures/trees.yy","name":"trees","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"EQ Cruncher","folderPath":"folders/nb extensions/EQ Cruncher.yy","name":"EQ Cruncher","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[],
@@ -25,6 +26,8 @@
   "resources":[
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
     {"id":{"name":"scrBinaryTreeStruct","path":"scripts/scrBinaryTreeStruct/scrBinaryTreeStruct.yy",},},
+    {"id":{"name":"scrEQCruncherEnums","path":"scripts/scrEQCruncherEnums/scrEQCruncherEnums.yy",},},
+    {"id":{"name":"scrExpressionStruct","path":"scripts/scrExpressionStruct/scrExpressionStruct.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",

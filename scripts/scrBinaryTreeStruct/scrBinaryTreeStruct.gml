@@ -50,13 +50,24 @@ function BinaryTree(_data=undefined, _left_child=undefined, _right_child=undefin
         if (is_instanceof(_tree, BinaryTree))
         {
             destroy(_tree.left_child);
+            delete _tree.left_child;
+            
             destroy(_tree.right_child);
+            delete _tree.right_child;
             
             if (is_struct(data) && variable_struct_exists(data, "cleanup"))
             {
                 data.cleanup();
+                delete data;
             }
         }
+    }
+    
+    /// @func   clear();
+    /// @desc Clears the tree's children and data so that it can be reused.
+    static clear = function()
+    {
+        destroy(self);
     }
     
     #endregion
