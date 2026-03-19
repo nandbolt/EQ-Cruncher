@@ -8,6 +8,7 @@ function Expression() constructor
     postfix_symbols = [];
     static precedence_map = ds_map_create();
     static special_constants_map = ds_map_create();
+    static symbol_string_map = ds_map_create();
     
     tree = new BinaryTree();
     
@@ -57,6 +58,26 @@ function Expression() constructor
         symbols = [];
         tree.clear();
         error_message = "";
+    }
+    
+    /// @func   toString();
+    /// @desc Returns a string representation of the expression.
+    static toString = function()
+    {
+        var _str = "", _symbol_count = array_length(symbols);
+        for (var _i = 0; _i < _symbol_count; _i++)
+        {
+            var _symbol = symbols[_i];
+            if (is_array(_symbol))
+            {
+                _str += string(_symbol[0]);
+            }
+            else
+            {
+            	_str += symbol_string_map[? _symbol];
+            }
+        }
+        return _str;
     }
     
     #endregion
@@ -213,6 +234,48 @@ function Expression() constructor
     #endregion
     
     #region Symbols
+    
+    /// @func   init_symbol_strings();
+    /// @desc Initializes the symbol string map.
+    static init_symbol_strings = function()
+    {
+        symbol_string_map[? EQS.ZERO] = "0";
+        symbol_string_map[? EQS.ONE] = "1";
+        symbol_string_map[? EQS.TWO] = "2";
+        symbol_string_map[? EQS.THREE] = "3";
+        symbol_string_map[? EQS.FOUR] = "4";
+        symbol_string_map[? EQS.FIVE] = "5";
+        symbol_string_map[? EQS.SIX] = "6";
+        symbol_string_map[? EQS.SEVEN] = "7";
+        symbol_string_map[? EQS.EIGHT] = "8";
+        symbol_string_map[? EQS.NINE] = "9";
+        symbol_string_map[? EQS.DECIMAL] = ".";
+        symbol_string_map[? EQS.OPEN_PARENTHESIS] = "(";
+        symbol_string_map[? EQS.CLOSE_PARENTHESIS] = ")";
+        symbol_string_map[? EQS.PLUS] = "+";
+        symbol_string_map[? EQS.MINUS] = "-";
+        symbol_string_map[? EQS.MULTIPLY] = "*";
+        symbol_string_map[? EQS.DIVIDE] = "/";
+        symbol_string_map[? EQS.POWER] = "^";
+        symbol_string_map[? EQS.ROOT] = "root";
+        symbol_string_map[? EQS.LOG] = "log";
+        symbol_string_map[? EQS.SINE] = "sin";
+        symbol_string_map[? EQS.COSINE] = "cos";
+        symbol_string_map[? EQS.TANGENT] = "tan";
+        symbol_string_map[? EQS.X1] = "x1";
+        symbol_string_map[? EQS.X2] = "x2";
+        symbol_string_map[? EQS.X3] = "x3";
+        symbol_string_map[? EQS.X4] = "x4";
+        symbol_string_map[? EQS.X5] = "x5";
+        symbol_string_map[? EQS.X6] = "x6";
+        symbol_string_map[? EQS.X7] = "x7";
+        symbol_string_map[? EQS.X8] = "x8";
+        symbol_string_map[? EQS.PI] = "pi";
+        symbol_string_map[? EQS.E] = "e";
+        symbol_string_map[? EQS.MOD] = "mod";
+        symbol_string_map[? EQS.ABSOLUTE_VALUE] = "abs";
+        symbol_string_map[? EQS.ROUND] = "round";
+    }
     
     /// @func   init_special_constants();
     /// @desc Initializes the special constants map of values.
@@ -461,6 +524,7 @@ function Expression() constructor
     
     if (!initialized)
     {
+        init_symbol_strings();
         init_precedence();
         init_special_constants();
         
