@@ -39,10 +39,11 @@ function Expression() constructor
     /// @desc Cleans up any memory before getting deleted.
     static cleanup = function()
     {
+        symbols = -1;
+        postfix_symbols = -1;
+        
         tree.cleanup();
         delete tree;
-        
-        ds_map_destroy(precedence_map);
     }
     
     #endregion
@@ -227,8 +228,123 @@ function Expression() constructor
     static update_symbols = function(_symbols)
     {
         symbols = [];
+        var _symbols_copy = [];
+        array_copy(_symbols_copy, 0, _symbols, 0, array_length(_symbols));
+        add_implied_symbols(_symbols_copy);
+        
+        var _symbol_count = array_length(_symbols_copy);
+        for (var _i = 0; _i < _symbol_count; _i++)
+        {
+            var _symbol = _symbols_copy[_i];
+            if (symbol_is_constant(_symbol))
+            {
+                var _number_arr = [0];
+                if (symbol_is_digit(_symbol) || _symbol == EQS.DECIMAL)
+                {
+                    var _number_str = construct_number_string(_symbols_copy, _i);
+                    _number_arr[0] = real(_number_str);
+                    _i += string_length(_number_str) - 1;
+                }
+                else
+                {
+                	_number_arr[0] = special_constants_map[? _symbol];
+                }
+                array_push(symbols, _number_arr);
+            }
+            else
+            {
+            	array_push(symbols, _symbol);
+            }
+        }
     }
     
+    /// @func   add_implied_symbols(symbols);
+    /// @param {Array<Constant.EQS>} symbols
+    /// @desc Adds symbols that are implied and required to have the tree working correctly.
+    static add_implied_symbols = function(_symbols)
+    {
+        for (var _i = 0; _i < array_length(_symbols); _i++)
+        {
+            var _symbol = _symbols[_i];
+            
+            // Trig/absolute value/round with single operand
+            if ((symbol_is_trig(_symbol) || _symbol == EQS.ABSOLUTE_VALUE || _symbol == EQS.ROUND) &&
+                implied_operator_number(_symbols, _i))
+            {
+                // Add implied 1 before operator
+                array_insert(_symbols, _i+1, EQS.ONE);
+                _i++;
+            }
+            // Log with single operand
+            else if (_symbol == EQS.LOG && implied_operator_number(_symbols, _i))
+            {
+                // Add implied log base 10
+                array_insert(_symbols, _i+1, EQS.ZERO);
+                array_insert(_symbols, _i+1, EQS.ONE);
+                _i += 2;
+            }
+            // Root with single operand
+            else if (_symbol == EQS.ROOT && implied_operator_number(_symbols, _i))
+            {
+                // Add implied square root
+                array_insert(_symbols, _i+1, EQS.TWO);
+                _i++;
+            }
+            // Positive/negative number
+            else if ((_symbol == EQS.PLUS || _symbol == EQS.MINUS) && implied_operator_number(_symbols, _i))
+            {
+                // Add implied zero
+                array_insert(_symbols, _i+1, EQS.ZERO);
+                _i++;
+            }
+            // Constant OR variable OR closing parenthesis with special constant OR opening parenthesis
+            else if (_i < (array_length(_symbol) - 1) &&
+                (symbol_is_constant(_symbol) || symbol_is_variable(_symbol) || _symbol == EQS.CLOSE_PARENTHESIS) &&
+                (symbol_is_special_constant(_symbols[_i+1]) || symbol_is_variable(_symbols[_i+1]) || _symbols[_i+1] == EQS.OPEN_PARENTHESIS)))
+            {
+                // Add implied multiplication
+                array_insert(_symbols, _i+1, EQS.MULTIPLY);
+                _i++;
+            }
+        }
+    }
+    
+    /// @func   implied_operator_number(symbols, idx);
+    /// @param {Array<Constant.EQS>} symbols
+    /// @param {Real} idx The index of the operator symbol
+    /// @desc Returns if the operator has an implied number somewhere. Should be called if the operator is already known.
+    static implied_operator_number = function(_symbols, _idx)
+    {
+        return _idx == 0 || symbol_is_operator(_symbols[_idx - 1]) || _symbols[_idx - 1] == EQS.OPEN_PARENTHESIS;
+    }
+    
+    /// @func   construct_number_string(symbols, start_idx);
+    /// @param {Array<Constant.EQS>} symbols
+    /// @param {Real} start_idx The index to start at for number creation
+    /// @desc Returns a string representation of the next number.
+    static construct_number_string = function(_symbols, _start_idx)
+    {
+        var _number_str = "", _number_size = 0;
+        var _symbol_count = array_length(_symbols);
+        for (var _i = _start_idx; _i < _symbol_count; _i++)
+        {
+            var _symbol = _symbols[_i];
+            if (symbol_is_digit(_symbol))
+            {
+                _number_str += string(_symbol);
+            }
+            else if (_symbol == EQS.DECIMAL)
+            {
+                _number_str += ".";
+            }
+            else
+            {
+            	break;
+            }
+        }
+        return _number_str;
+    }
+
     /// @func   update_postfix_symbols();
     /// @desc Converts the expression's symbols into its postfix form which can be used to build an expression tree.
     static update_postfix_symbols = function()
@@ -274,6 +390,14 @@ function Expression() constructor
     static symbol_is_operator = function(_symbol)
     {
         return !is_undefined(precedence_map[? _symbol]) && _symbol != EQS.OPEN_PARENTHESIS;
+    }
+    
+    /// @func   symbol_is_trig(symbol);
+    /// @param {Constant.EQS} symbol
+    /// @desc Returns if the symbol is a trigonometric operator.
+    static symbol_is_trig = function(_symbol)
+    {
+        return _symbol == EQS.SINE || _symbol == EQS.COSINE || _symbol == EQS.TANGENT;
     }
     
     /// @func   symbol_is_parenthesis(symbol);
