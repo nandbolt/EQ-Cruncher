@@ -413,6 +413,52 @@ function Expression() constructor
     static update_postfix_symbols = function()
     {
         postfix_symbols = [];
+        
+        // Scan infix equation
+        var _operator_stack = [], _symbol_count = array_length(symbols);
+        for (var _i = 0; _i < _symbol_count; _i++)
+        {
+            var _symbol = symbols[_i];
+            if (!symbol_is_operator(_symbol) && !symbol_is_parenthesis(_symbol))
+            {
+                array_push(postfix_symbols, _symbol);
+            }
+            else if (_symbol == EQS.OPEN_PARENTHESIS)
+            {
+                array_push(_operator_stack, _symbol);
+            }
+            else if (_symbol == EQS.CLOSE_PARENTHESIS)
+            {
+                // Pop stack until openning parenthesis is removed, appending
+                // each operator to the end of the symbols.
+                var _top_symbol = array_pop(_operator_stack);
+                while (_top_symbol != EQS.OPEN_PARENTHESIS)
+                {
+                    array_push(symbols, _top_symbol);
+                    _top_symbol = array_pop(_operator_stack);
+                }
+            }
+            else
+            {
+            	// Remove any operators in the stack that have higher or equal precedence
+                // and append them to the symbols, then push the symbol to the stack.
+                var _operator_count = array_length(_operator_stack);
+                while (_operator_count > 0 &&
+                    precedence_map[? _operator_stack[_operator_count-1]] >= precedence_map[? _symbol])
+                {
+                    array_push(postfix_symbols, array_pop(_operator_stack));
+                }
+                array_push(_operator_stack, _symbol);
+            }
+        }
+        
+        // Add remaining stack operators
+        while (array_length(_operator_stack) > 0)
+        {
+            array_push(postfix_symbols, array_pop(_operator_stack));
+        }
+        
+        _operator_stack = -1;
     }
     
     /// @func   symbol_is_digit(symbol);
