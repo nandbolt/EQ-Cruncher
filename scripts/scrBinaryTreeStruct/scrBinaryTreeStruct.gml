@@ -63,12 +63,5 @@ function BinaryTree(_data=undefined, _left_child=undefined, _right_child=undefin
         }
     }
     
-    /// @func   clear();
-    /// @desc Clears the tree's children and data so that it can be reused.
-    static clear = function()
-    {
-        destroy(self);
-    }
-    
     #endregion
 }

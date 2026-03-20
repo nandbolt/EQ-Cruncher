@@ -9,8 +9,9 @@ function Expression() constructor
     static precedence_map = ds_map_create();
     static special_constants_map = ds_map_create();
     static symbol_string_map = ds_map_create();
+    static operation_func_map = ds_map_create();
     
-    tree = new BinaryTree();
+    tree = undefined;
     
     error_message = "";
     
@@ -42,9 +43,7 @@ function Expression() constructor
     {
         symbols = -1;
         postfix_symbols = -1;
-        
-        tree.cleanup();
-        delete tree;
+        destroy_tree();
     }
     
     #endregion
@@ -56,7 +55,7 @@ function Expression() constructor
     static clear = function()
     {
         symbols = [];
-        tree.clear();
+        destroy_tree();
         error_message = "";
     }
     
@@ -363,7 +362,7 @@ function Expression() constructor
             // Constant OR variable OR closing parenthesis with special constant OR opening parenthesis
             else if (_i < (array_length(_symbol) - 1) &&
                 (symbol_is_constant(_symbol) || symbol_is_variable(_symbol) || _symbol == EQS.CLOSE_PARENTHESIS) &&
-                (symbol_is_special_constant(_symbols[_i+1]) || symbol_is_variable(_symbols[_i+1]) || _symbols[_i+1] == EQS.OPEN_PARENTHESIS)))
+                (symbol_is_special_constant(_symbols[_i+1]) || symbol_is_variable(_symbols[_i+1]) || _symbols[_i+1] == EQS.OPEN_PARENTHESIS))
             {
                 // Add implied multiplication
                 array_insert(_symbols, _i+1, EQS.MULTIPLY);
@@ -419,7 +418,7 @@ function Expression() constructor
         for (var _i = 0; _i < _symbol_count; _i++)
         {
             var _symbol = symbols[_i];
-            if (!symbol_is_operator(_symbol) && !symbol_is_parenthesis(_symbol))
+            if (is_array(_symbol) || (!symbol_is_operator(_symbol) && !symbol_is_parenthesis(_symbol)))
             {
                 array_push(postfix_symbols, _symbol);
             }
@@ -521,16 +520,106 @@ function Expression() constructor
     
     #region Tree
     
+    /// @func   destroy_tree();
+    /// @desc Destroys the tree.
+    static destroy_tree = function()
+    {
+        if (is_instanceof(tree, BinaryTree))
+        {
+            tree.cleanup();
+            delete tree;
+        }
+    }
+    
     /// @func   update_tree();
     /// @desc Generates the tree based on the current postfix symbols.
     static update_tree = function()
     {
-        tree.clear();
+        destroy_tree();
+        
+        var _tree_stack = [], _symbol_count = array_length(symbols);
+        for (var _i = 0; _i < _symbol_count; _i++)
+        {
+            var _symbol = symbols[_i];
+            if (!symbol_is_operator(_symbol))
+            {
+                array_push(_tree_stack, new BinaryTree(_symbol));
+            }
+            else
+            {
+            	var _right = array_pop(_tree_stack);
+                var _left = array_pop(_tree_stack);
+                array_push(_tree_stack, new BinaryTree(_symbol, _left, _right));
+            }
+        }
+        
+        tree = array_pop(_tree_stack);
+        
+        _tree_stack = -1;
+    }
+    
+    /// @func   evaluate_tree(tree, vars);
+    /// @param {Struct.BinaryTree} tree The expression tree
+    /// @param {Array<Real>} vars
+    /// @desc Evaluates the operations within the tree and returns a real number OR throws an error.
+    static evaluate_tree = function(_tree, _vars)
+    {
+        if (is_undefined(_tree))
+        {
+            return 0;
+        }
+        
+        var _symbol = _tree.data;
+        
+        // Constant
+        if (is_array(_symbol))
+        {
+            return _tree.data[0];
+        }
+        
+        // Variable
+        if (symbol_is_variable(_symbol))
+        {
+            var _idx = _symbol - EQS.X1;
+            if (_idx >= array_length(_vars))
+            {
+                throw("Evaluation error: variable not found in input!");
+            }
+            return _vars[_idx];
+        }
+        
+        var _left_value = evaluate_tree(_tree.left_child, _vars);
+        var _right_value = evaluate_tree(_tree.right_child, _vars);
+        return evaluate_operation(_symbol, _left_value, _right_value);
     }
     
     #endregion
     
-    #region Precedence
+    #region Evaluation
+    
+    /// @func   evaluate(vars);
+    /// @param {Array<Real>} vars   The set of independent variables corresponding to [x1, x2, ..., x8]
+    /// @desc Returns the evaluated expression based on the independent variables as a real number OR
+    /// a string if an error occurred.
+    static evaluate = function(_vars=[])
+    {
+        var _value = 0;
+        
+        try
+        {
+        	evaluate_tree(tree, _vars);
+        }
+        catch (_exception)
+        {
+        	_value = _exception.message;
+        }
+        
+        return _value;
+    }
+    
+    #endregion
+    
+    #region Operators
     
     /// @func   init_precedence();
     /// @desc Initializes the precedence map, dictating the order of operations for the operators.
@@ -552,18 +641,207 @@ function Expression() constructor
         precedence_map[? EQS.ROOT] = 5;
     }
     
-    #endregion
+    /// @func   init_operation_functions();
+    /// @desc Initializes the symbol string map.
+    static init_operator_functions = function()
+    {
+        operation_func_map[? EQS.PLUS] = evaluate_operation_addition;
+        operation_func_map[? EQS.MINUS] = evaluate_operation_subtraction;
+        operation_func_map[? EQS.MULTIPLY] = evaluate_operation_multiplication;
+        operation_func_map[? EQS.DIVIDE] = evaluate_operation_division;
+        operation_func_map[? EQS.POWER] = evaluate_operation_power;
+        operation_func_map[? EQS.ROOT] = evaluate_operation_root;
+        operation_func_map[? EQS.LOG] = evaluate_operation_log;
+        operation_func_map[? EQS.SINE] = evaluate_operation_sine;
+        operation_func_map[? EQS.COSINE] = evaluate_operation_cosine;
+        operation_func_map[? EQS.TANGENT] = evaluate_operation_tangent;
+        operation_func_map[? EQS.MOD] = evaluate_operation_mod;
+        operation_func_map[? EQS.ABSOLUTE_VALUE] = evaluate_operation_absolute_value;
+        operation_func_map[? EQS.ROUND] = evaluate_operation_round;
+    }
     
-    #region Evaluation
-    
-    /// @func   evaluate(args);
-    /// @param {Array} args
-    /// @desc Returns either a number that is the evaluated expression OR a string if an error occurred.
-    static evaluate = function(args)
+    /// @func   evaluate_tree_operation(symbol, left_value, right_value);
+    /// @param {Constant.EQS} symbol
+    /// @param {Real} left_value
+    /// @param {Real} right_value
+    /// @desc Evaluates a single math operation, returning the output.
+    static evaluate_operation = function(_symbol, _left_value, _right_value)
     {
         var _value = 0;
-        
+        var _operator_func = operation_func_map[? _symbol];
+        if (is_method(_operator_func))
+        {
+            _value = _operator_func(_symbol, _left_value, _right_value);
+        }
         return _value;
+    }
+    
+    /// @func   evaluate_operation_addition(symbol, left_value, right_value);
+    /// @param {Constant.EQS} symbol
+    /// @param {Real} left_value
+    /// @param {Real} right_value
+    /// @desc Evaluates a single addition operation, returning the output.
+    static evaluate_operation_addition = function(_symbol, _left_value, _right_value)
+    {
+        return _left_value + _right_value;
+    }
+    
+    /// @func   evaluate_operation_subtraction(symbol, left_value, right_value);
+    /// @param {Constant.EQS} symbol
+    /// @param {Real} left_value
+    /// @param {Real} right_value
+    /// @desc Evaluates a single subtraction operation, returning the output.
+    static evaluate_operation_subtraction = function(_symbol, _left_value, _right_value)
+    {
+        return _left_value - _right_value;
+    }
+    
+    /// @func   evaluate_operation_multiplication(symbol, left_value, right_value);
+    /// @param {Constant.EQS} symbol
+    /// @param {Real} left_value
+    /// @param {Real} right_value
+    /// @desc Evaluates a single multiplication operation, returning the output.
+    static evaluate_operation_multiplication = function(_symbol, _left_value, _right_value)
+    {
+        return _left_value * _right_value;
+    }
+    
+    /// @func   evaluate_operation_division(symbol, left_value, right_value);
+    /// @param {Constant.EQS} symbol
+    /// @param {Real} left_value
+    /// @param {Real} right_value
+    /// @desc Evaluates a single division operation, returning the output.
+    static evaluate_operation_division = function(_symbol, _left_value, _right_value)
+    {
+        var _quotient = _left_value / _right_value;
+        if (is_infinity(_quotient))
+        {
+            throw("Evaluation error: division by zero!");
+        }
+        else if (is_nan(_quotient))
+        {
+            throw("Evaluation error: undefined division!");
+        }
+        return _quotient;
+    }
+    
+    /// @func   evaluate_operation_power(symbol, left_value, right_value);
+    /// @param {Constant.EQS} symbol
+    /// @param {Real} left_value
+    /// @param {Real} right_value
+    /// @desc Evaluates a single exponential operation, returning the output.
+    static evaluate_operation_power = function(_symbol, _left_value, _right_value)
+    {
+        var _power = power(_left_value, _right_value);
+        if (is_nan(_power))
+        {
+            throw("Evaluation error: negative base + fractional exponent!");
+        }
+        return _power;
+    }
+    
+    /// @func   evaluate_operation_sine(symbol, left_value, right_value);
+    /// @param {Constant.EQS} symbol
+    /// @param {Real} left_value
+    /// @param {Real} right_value
+    /// @desc Evaluates a single sine operation, returning the output.
+    static evaluate_operation_sine = function(_symbol, _left_value, _right_value)
+    {
+        return _left_value * sin(_right_value);
+    }
+    
+    /// @func   evaluate_operation_cosine(symbol, left_value, right_value);
+    /// @param {Constant.EQS} symbol
+    /// @param {Real} left_value
+    /// @param {Real} right_value
+    /// @desc Evaluates a single cosine operation, returning the output.
+    static evaluate_operation_cosine = function(_symbol, _left_value, _right_value)
+    {
+        return _left_value * cos(_right_value);
+    }
+    
+    /// @func   evaluate_operation_tangent(symbol, left_value, right_value);
+    /// @param {Constant.EQS} symbol
+    /// @param {Real} left_value
+    /// @param {Real} right_value
+    /// @desc Evaluates a single tangent operation, returning the output.
+    static evaluate_operation_tangent = function(_symbol, _left_value, _right_value)
+    {
+        var _tan = _left_value * tan(_right_value);
+        if (is_infinity(_tan))
+        {
+            throw("Evaluation error: infinite tangent!");
+        }
+        return _tan;
+    }
+    
+    /// @func   evaluate_operation_log(symbol, left_value, right_value);
+    /// @param {Constant.EQS} symbol
+    /// @param {Real} left_value
+    /// @param {Real} right_value
+    /// @desc Evaluates a single logarithmic operation, returning the output.
+    static evaluate_operation_log = function(_symbol, _left_value, _right_value)
+    {
+        var _log = logn(_left_value, _right_value);
+        if (is_nan(_log))
+        {
+            throw("Evaluation error: negative log!");
+        }
+        return _log;
+    }
+    
+    /// @func   evaluate_operation_root(symbol, left_value, right_value);
+    /// @param {Constant.EQS} symbol
+    /// @param {Real} left_value
+    /// @param {Real} right_value
+    /// @desc Evaluates a single root operation, returning the output.
+    static evaluate_operation_root = function(_symbol, _left_value, _right_value)
+    {
+        var _root = logn(_left_value, _right_value);
+        if (is_nan(_root))
+        {
+            throw("Evaluation error: negative root!");
+        }
+        return _root;
+    }
+    
+    /// @func   evaluate_operation_mod(symbol, left_value, right_value);
+    /// @param {Constant.EQS} symbol
+    /// @param {Real} left_value
+    /// @param {Real} right_value
+    /// @desc Evaluates a single modulo operation, returning the output.
+    static evaluate_operation_mod = function(_symbol, _left_value, _right_value)
+    {
+        var _mod = _left_value % _right_value;
+        if (is_infinity(_mod))
+        {
+            throw("Evaluation error: mod zero!");
+        }
+        else if (is_nan(_mod))
+        {
+            throw("Evaluation error: mod not working!");
+        }
+        return _mod;
+    }
+    
+    /// @func   evaluate_operation_absolute_value(symbol, left_value, right_value);
+    /// @param {Constant.EQS} symbol
+    /// @param {Real} left_value
+    /// @param {Real} right_value
+    /// @desc Evaluates a single absolute value operation, returning the output.
+    static evaluate_operation_absolute_value = function(_symbol, _left_value, _right_value)
+    {
+        return _left_value * abs(_right_value);
+    }
+    
+    /// @func   evaluate_operation_round(symbol, left_value, right_value);
+    /// @param {Constant.EQS} symbol
+    /// @param {Real} left_value
+    /// @param {Real} right_value
+    /// @desc Evaluates a single rounding operation, returning the output.
+    static evaluate_operation_round = function(_symbol, _left_value, _right_value)
+    {
+        return _left_value * round(_right_value);
     }
     
     #endregion
@@ -573,6 +851,7 @@ function Expression() constructor
         init_symbol_strings();
         init_precedence();
         init_special_constants();
+        init_operator_functions();
         
         initialized = true;
     }
