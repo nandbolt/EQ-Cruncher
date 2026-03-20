@@ -23,8 +23,6 @@ function Expression() constructor
     static set = function(_symbols)
     {
         error_message = validate(_symbols);
-        show_debug_message(_symbols);
-        show_debug_message(error_message);
         if (is_valid())
         {
             update_symbols(_symbols);
@@ -441,9 +439,8 @@ function Expression() constructor
             {
             	// Remove any operators in the stack that have higher or equal precedence
                 // and append them to the symbols, then push the symbol to the stack.
-                var _operator_count = array_length(_operator_stack);
-                while (_operator_count > 0 &&
-                    precedence_map[? _operator_stack[_operator_count-1]] >= precedence_map[? _symbol])
+                while (array_length(_operator_stack) > 0 &&
+                    precedence_map[? _operator_stack[array_length(_operator_stack)-1]] >= precedence_map[? _symbol])
                 {
                     array_push(postfix_symbols, array_pop(_operator_stack));
                 }
@@ -537,10 +534,10 @@ function Expression() constructor
     {
         destroy_tree();
         
-        var _tree_stack = [], _symbol_count = array_length(symbols);
-        for (var _i = 0; _i < _symbol_count; _i++)
+        var _tree_stack = [], _postfix_symbol_count = array_length(postfix_symbols);
+        for (var _i = 0; _i < _postfix_symbol_count; _i++)
         {
-            var _symbol = symbols[_i];
+            var _symbol = postfix_symbols[_i];
             if (!symbol_is_operator(_symbol))
             {
                 array_push(_tree_stack, new BinaryTree(_symbol));
@@ -607,7 +604,7 @@ function Expression() constructor
         
         try
         {
-        	evaluate_tree(tree, _vars);
+        	_value = evaluate_tree(tree, _vars);
         }
         catch (_exception)
         {
@@ -669,7 +666,7 @@ function Expression() constructor
     {
         var _value = 0;
         var _operator_func = operation_func_map[? _symbol];
-        if (is_method(_operator_func))
+        if (is_callable(_operator_func))
         {
             _value = _operator_func(_symbol, _left_value, _right_value);
         }
