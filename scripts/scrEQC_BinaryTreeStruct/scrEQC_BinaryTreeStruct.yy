@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scrBinaryTreeStruct",
+  "%Name":"scrEQC_BinaryTreeStruct",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scrBinaryTreeStruct",
+  "name":"scrEQC_BinaryTreeStruct",
   "parent":{
     "name":"trees",
     "path":"folders/nb extensions/data structures/trees.yy",

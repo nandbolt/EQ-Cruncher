@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scrEQCruncherEnums",
+  "%Name":"scrEQC_Enums",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scrEQCruncherEnums",
+  "name":"scrEQC_Enums",
   "parent":{
     "name":"EQ Cruncher",
     "path":"folders/nb extensions/EQ Cruncher.yy",
