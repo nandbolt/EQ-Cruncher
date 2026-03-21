@@ -15,6 +15,8 @@
     {"$GMFolder":"","%Name":"trees","folderPath":"folders/nb extensions/data structures/trees.yy","name":"trees","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"demos","folderPath":"folders/nb extensions/demos.yy","name":"demos","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"EQ Cruncher","folderPath":"folders/nb extensions/demos/EQ Cruncher.yy","name":"EQ Cruncher","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"basic equations","folderPath":"folders/nb extensions/demos/EQ Cruncher/basic equations.yy","name":"basic equations","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"time equations","folderPath":"folders/nb extensions/demos/EQ Cruncher/time equations.yy","name":"time equations","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"EQ Cruncher","folderPath":"folders/nb extensions/EQ Cruncher.yy","name":"EQ Cruncher","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "ForcedPrefabProjectReferences":[],
@@ -26,8 +28,11 @@
   },
   "name":"EQ Cruncher",
   "resources":[
-    {"id":{"name":"oEQC_ScatterPlot","path":"objects/oEQC_ScatterPlot/oEQC_ScatterPlot.yy",},},
-    {"id":{"name":"rEQC_Demo","path":"rooms/rEQC_Demo/rEQC_Demo.yy",},},
+    {"id":{"name":"oEQC_BasicEquations","path":"objects/oEQC_BasicEquations/oEQC_BasicEquations.yy",},},
+    {"id":{"name":"oEQC_DemoBase","path":"objects/oEQC_DemoBase/oEQC_DemoBase.yy",},},
+    {"id":{"name":"oEQC_TimeEquations","path":"objects/oEQC_TimeEquations/oEQC_TimeEquations.yy",},},
+    {"id":{"name":"rEQC_BasicEquationsDemo","path":"rooms/rEQC_BasicEquationsDemo/rEQC_BasicEquationsDemo.yy",},},
+    {"id":{"name":"rEQC_TimeEquationsDemo","path":"rooms/rEQC_TimeEquationsDemo/rEQC_TimeEquationsDemo.yy",},},
     {"id":{"name":"scrBinaryTreeStruct","path":"scripts/scrBinaryTreeStruct/scrBinaryTreeStruct.yy",},},
     {"id":{"name":"scrEQCruncherEnums","path":"scripts/scrEQCruncherEnums/scrEQCruncherEnums.yy",},},
     {"id":{"name":"scrExpressionStruct","path":"scripts/scrExpressionStruct/scrExpressionStruct.yy",},},
@@ -35,7 +40,8 @@
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
-    {"roomId":{"name":"rEQC_Demo","path":"rooms/rEQC_Demo/rEQC_Demo.yy",},},
+    {"roomId":{"name":"rEQC_BasicEquationsDemo","path":"rooms/rEQC_BasicEquationsDemo/rEQC_BasicEquationsDemo.yy",},},
+    {"roomId":{"name":"rEQC_TimeEquationsDemo","path":"rooms/rEQC_TimeEquationsDemo/rEQC_TimeEquationsDemo.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[

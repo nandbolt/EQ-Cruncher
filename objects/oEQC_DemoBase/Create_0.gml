@@ -1,4 +1,10 @@
-/// @desc Basic Scatter Plot Demo
+/// @desc EQ Cruncher Demo Base
+
+/*
+ * This is a base object inherited by the demos for EQ Cruncher.
+*/
+
+demo_name = "demo";
 
 plot_resolution = 4;
 point_radius = 1;
@@ -20,6 +26,11 @@ xorigin = room_width * 0.5;
 yorigin = room_height * 0.5;
 local_xscale = 64;
 local_yscale = -64;
+
+// GUI
+xmargin = 16;
+ymargin = 8;
+output_string = "y";
 
 #region Axes
 
@@ -103,63 +114,38 @@ generate_equation = function(_eq_idx, _symbols)
 {
     eqs[_eq_idx] = new Expression();
     eqs[_eq_idx].set(_symbols);
-    eq_strs[_eq_idx] = $"y = {string(eqs[_eq_idx])}";
+    eq_strs[_eq_idx] = $"{output_string} = {string(eqs[_eq_idx])}";
+    post_process_equation_string(_eq_idx);
     ys[_eq_idx] = [];
     generate_ys(xs, ys[_eq_idx], eqs[_eq_idx]);
 }
 
+/// @func   post_process_equation_string(eq_idx);
+/// @desc Adds some post-processing to the equation's string if wanted.
+post_process_equation_string = function(_eq_idx){}
+
 #endregion
 
-var _eq_idx = 0;
+#region Plots
 
-// y = 0
-generate_equation(_eq_idx, [EQS.ZERO]);
-_eq_idx++;
+/// @func   on_plot_changed();
+/// @desc Called whenever a plot is changed (but not when the demo changes).
+on_plot_changed = function(){}
 
-// y = x
-generate_equation(_eq_idx, [EQS.X1]);
-_eq_idx++;
+#endregion
 
-// y = x^2
-generate_equation(_eq_idx, [EQS.X1, EQS.POWER, EQS.TWO]);
-_eq_idx++;
+#region Debugging
 
-// y = x^3
-generate_equation(_eq_idx, [EQS.X1, EQS.POWER, EQS.THREE]);
-_eq_idx++;
+/// @func   print_equation(eq_idx);
+/// @param {Real} eq_idx The equation index
+/// @desc Prints information about the equation.
+print_equation = function(_eq_idx)
+{
+    var _eq = eqs[eq_idx];
+    show_debug_message($"\ny = {_eq}");
+    show_debug_message($"symbols: {_eq.symbols}");
+    show_debug_message($"postfix: {_eq.postfix_symbols}");
+    show_debug_message($"tree: {_eq.tree}");
+}
 
-// y = 1 / x
-generate_equation(_eq_idx, [EQS.ONE, EQS.DIVIDE, EQS.X1]);
-_eq_idx++;
-
-// y = sqrt(x)
-generate_equation(_eq_idx, [EQS.ROOT, EQS.X1]);
-_eq_idx++;
-
-// y = log10(x)
-generate_equation(_eq_idx, [EQS.LOG, EQS.X1]);
-_eq_idx++;
-
-// y = sin(x)
-generate_equation(_eq_idx, [EQS.SINE, EQS.X1]);
-_eq_idx++;
-
-// y = cos(x)
-generate_equation(_eq_idx, [EQS.COSINE, EQS.X1]);
-_eq_idx++;
-
-// y = tan(x)
-generate_equation(_eq_idx, [EQS.TANGENT, EQS.X1]);
-_eq_idx++;
-
-// y = x mod 2
-generate_equation(_eq_idx, [EQS.X1, EQS.MOD, EQS.TWO]);
-_eq_idx++;
-
-// y = abs(x)
-generate_equation(_eq_idx, [EQS.ABSOLUTE_VALUE, EQS.X1]);
-_eq_idx++;
-
-// y = round(x)
-generate_equation(_eq_idx, [EQS.ROUND, EQS.X1]);
-_eq_idx++;
+#endregion

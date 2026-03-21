@@ -1,3 +1,12 @@
+/*
+ * EQ Cruncher - An equation evaluator for GameMaker.
+ * 
+ * created by nandbolt
+ * 
+ * The code falls under the MIT Licence, meaning you're welcome
+ * to use it in your own commercial projects to your heart's content!
+*/
+
 /// @func   Expression();
 /// @desc A mathematical expression that can "hopefully" evaluate into a number.
 function Expression() constructor
@@ -57,14 +66,15 @@ function Expression() constructor
         error_message = "";
     }
     
-    /// @func   toString();
-    /// @desc Returns a string representation of the expression.
-    static toString = function()
+    /// @func   symbols_get_string(symbols);
+    /// @param {Array<Constant.EQS>} symbols
+    /// @desc Returns the string representation of the given symbols.
+    static symbols_get_string = function(_symbols)
     {
-        var _str = "", _symbol_count = array_length(symbols);
+        var _str = "", _symbol_count = array_length(_symbols);
         for (var _i = 0; _i < _symbol_count; _i++)
         {
-            var _symbol = symbols[_i];
+            var _symbol = _symbols[_i];
             if (is_array(_symbol))
             {
                 _str += string(_symbol[0]);
@@ -75,6 +85,13 @@ function Expression() constructor
             }
         }
         return _str;
+    }
+    
+    /// @func   toString();
+    /// @desc Returns a string representation of the expression.
+    static toString = function()
+    {
+        return symbols_get_string(symbols);
     }
     
     #endregion
@@ -358,12 +375,12 @@ function Expression() constructor
                 _i++;
             }
             // Constant OR variable OR closing parenthesis with special constant OR opening parenthesis
-            else if (_i < (array_length(_symbol) - 1) &&
+            else if (_i < (array_length(_symbols) - 1) &&
                 (symbol_is_constant(_symbol) || symbol_is_variable(_symbol) || _symbol == EQS.CLOSE_PARENTHESIS) &&
                 (symbol_is_special_constant(_symbols[_i+1]) || symbol_is_variable(_symbols[_i+1]) || _symbols[_i+1] == EQS.OPEN_PARENTHESIS))
             {
                 // Add implied multiplication
-                array_insert(_symbols, _i, EQS.MULTIPLY);
+                array_insert(_symbols, _i+1, EQS.MULTIPLY);
                 _i++;
             }
         }
@@ -431,7 +448,7 @@ function Expression() constructor
                 var _top_symbol = array_pop(_operator_stack);
                 while (_top_symbol != EQS.OPEN_PARENTHESIS)
                 {
-                    array_push(symbols, _top_symbol);
+                    array_push(postfix_symbols, _top_symbol);
                     _top_symbol = array_pop(_operator_stack);
                 }
             }
