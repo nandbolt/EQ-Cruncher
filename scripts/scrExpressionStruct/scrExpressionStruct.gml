@@ -95,7 +95,7 @@ function Expression() constructor
         }
         catch (_exception)
         {
-        	return _exception.message;
+        	return _exception;
         }
         return "";
     }
@@ -332,29 +332,29 @@ function Expression() constructor
                 implied_operator_number(_symbols, _i))
             {
                 // Add implied 1 before operator
-                array_insert(_symbols, _i+1, EQS.ONE);
+                array_insert(_symbols, _i, EQS.ONE);
                 _i++;
             }
             // Log with single operand
             else if (_symbol == EQS.LOG && implied_operator_number(_symbols, _i))
             {
                 // Add implied log base 10
-                array_insert(_symbols, _i+1, EQS.ZERO);
-                array_insert(_symbols, _i+1, EQS.ONE);
+                array_insert(_symbols, _i, EQS.ZERO);
+                array_insert(_symbols, _i, EQS.ONE);
                 _i += 2;
             }
             // Root with single operand
             else if (_symbol == EQS.ROOT && implied_operator_number(_symbols, _i))
             {
                 // Add implied square root
-                array_insert(_symbols, _i+1, EQS.TWO);
+                array_insert(_symbols, _i, EQS.TWO);
                 _i++;
             }
             // Positive/negative number
             else if ((_symbol == EQS.PLUS || _symbol == EQS.MINUS) && implied_operator_number(_symbols, _i))
             {
                 // Add implied zero
-                array_insert(_symbols, _i+1, EQS.ZERO);
+                array_insert(_symbols, _i, EQS.ZERO);
                 _i++;
             }
             // Constant OR variable OR closing parenthesis with special constant OR opening parenthesis
@@ -363,7 +363,7 @@ function Expression() constructor
                 (symbol_is_special_constant(_symbols[_i+1]) || symbol_is_variable(_symbols[_i+1]) || _symbols[_i+1] == EQS.OPEN_PARENTHESIS))
             {
                 // Add implied multiplication
-                array_insert(_symbols, _i+1, EQS.MULTIPLY);
+                array_insert(_symbols, _i, EQS.MULTIPLY);
                 _i++;
             }
         }
@@ -604,11 +604,18 @@ function Expression() constructor
         
         try
         {
-        	_value = evaluate_tree(tree, _vars);
+            if (is_valid())
+            {
+                _value = evaluate_tree(tree, _vars);
+            }
+            else
+            {
+            	throw("Evaluation error: invalid expression!");
+            }
         }
         catch (_exception)
         {
-        	_value = _exception.message;
+        	_value = _exception;
         }
         
         return _value;
