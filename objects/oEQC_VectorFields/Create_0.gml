@@ -6,7 +6,7 @@
 event_inherited();
 
 demo_name = "vector fields";
-output_string = "v(x,y) = f(x,y)";
+output_string = "vx = f(x,y)";
 
 vxs = [];
 vys = [];
@@ -93,6 +93,7 @@ var _eq_idx = 0;
 generate_equation(_eq_idx, [EQS.ONE]);
 _eq_idx++;
 generate_equation(_eq_idx, [EQS.ONE]);
+eq_strs[_eq_idx] = string_replace(eq_strs[_eq_idx], "vx", "vy");
 _eq_idx++;
 
 // vx = y
@@ -100,6 +101,7 @@ _eq_idx++;
 generate_equation(_eq_idx, [EQS.X2]);
 _eq_idx++;
 generate_equation(_eq_idx, [EQS.X1]);
+eq_strs[_eq_idx] = string_replace(eq_strs[_eq_idx], "vx", "vy");
 _eq_idx++;
 
 // vx = 4sin(y)
@@ -107,6 +109,7 @@ _eq_idx++;
 generate_equation(_eq_idx, [EQS.FOUR, EQS.SINE, EQS.X2]);
 _eq_idx++;
 generate_equation(_eq_idx, [EQS.FOUR, EQS.COSINE, EQS.X1]);
+eq_strs[_eq_idx] = string_replace(eq_strs[_eq_idx], "vx", "vy");
 _eq_idx++;
 
 // vx = 4sin(x)
@@ -114,6 +117,7 @@ _eq_idx++;
 generate_equation(_eq_idx, [EQS.FOUR, EQS.SINE, EQS.X1]);
 _eq_idx++;
 generate_equation(_eq_idx, [EQS.FOUR, EQS.COSINE, EQS.X2]);
+eq_strs[_eq_idx] = string_replace(eq_strs[_eq_idx], "vx", "vy");
 _eq_idx++;
 
 // vx = 4sin(x)
@@ -121,6 +125,7 @@ _eq_idx++;
 generate_equation(_eq_idx, [EQS.FOUR, EQS.SINE, EQS.X1]);
 _eq_idx++;
 generate_equation(_eq_idx, [EQS.FOUR, EQS.COSINE, EQS.X1]);
+eq_strs[_eq_idx] = string_replace(eq_strs[_eq_idx], "vx", "vy");
 _eq_idx++;
 
 // vx = x + y
@@ -128,6 +133,7 @@ _eq_idx++;
 generate_equation(_eq_idx, [EQS.X1, EQS.PLUS, EQS.X2]);
 _eq_idx++;
 generate_equation(_eq_idx, [EQS.X1, EQS.PLUS, EQS.X2]);
+eq_strs[_eq_idx] = string_replace(eq_strs[_eq_idx], "vx", "vy");
 _eq_idx++;
 
 generate_plot(eq_idx);
