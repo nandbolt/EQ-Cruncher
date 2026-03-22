@@ -76,7 +76,7 @@ _eq_idx++;
 generate_equation(_eq_idx, [EQS.OPEN_PARENTHESIS, EQS.X2, EQS.X1, EQS.CLOSE_PARENTHESIS, EQS.MOD, EQS.TWO]);
 _eq_idx++;
 
-// y = abs(tx)
+// y = |tx|
 generate_equation(_eq_idx, [EQS.ABSOLUTE_VALUE, EQS.OPEN_PARENTHESIS, EQS.X2, EQS.X1, EQS.CLOSE_PARENTHESIS]);
 _eq_idx++;
 

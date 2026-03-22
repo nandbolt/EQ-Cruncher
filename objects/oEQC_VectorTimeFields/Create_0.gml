@@ -44,8 +44,8 @@ generate_plot = function(_eq_idx)
     {
         var _local_x = transform_to_local(xs[_i], xorigin, local_xscale);
         var _local_y = transform_to_local(ys[_i], yorigin, local_yscale);
-        var _local_vx = _xexpression.evaluate([_local_x, _local_y]);
-        var _local_vy = _yexpression.evaluate([_local_x, _local_y]);
+        var _local_vx = _xexpression.evaluate([_local_x, _local_y, time]);
+        var _local_vy = _yexpression.evaluate([_local_x, _local_y, time]);
         var _vx = _local_vx, _vy = _local_vy;
         if (!is_string(_vx) && !is_string(_vy))
         {
@@ -90,44 +90,44 @@ var _eq_idx = 0;
 
 // vx = 1
 // vy = 1
-generate_equation(_eq_idx, [EQS.ONE]);
+generate_equation(_eq_idx, [EQS.X3]);
 _eq_idx++;
-generate_equation(_eq_idx, [EQS.ONE]);
+generate_equation(_eq_idx, [EQS.X3]);
 _eq_idx++;
 
-// vx = y
+// vx = x + y + t
+// vy = x + y + t
+generate_equation(_eq_idx, [EQS.X1, EQS.PLUS, EQS.X2, EQS.PLUS, EQS.X3]);
+_eq_idx++;
+generate_equation(_eq_idx, [EQS.X1, EQS.PLUS, EQS.X2, EQS.PLUS, EQS.X3]);
+_eq_idx++;
+
+// vx = ysin(t)
 // vy = x
-generate_equation(_eq_idx, [EQS.X2]);
+generate_equation(_eq_idx, [EQS.X2, EQS.MULTIPLY, EQS.SINE, EQS.X3]);
 _eq_idx++;
 generate_equation(_eq_idx, [EQS.X1]);
 _eq_idx++;
 
-// vx = 4sin(y)
-// vy = 4cos(x)
-generate_equation(_eq_idx, [EQS.FOUR, EQS.SINE, EQS.X2]);
+// vx = 4sin(y+t)
+// vy = 4cos(x+t)
+generate_equation(_eq_idx, [EQS.FOUR, EQS.SINE, EQS.OPEN_PARENTHESIS, EQS.X2, EQS.PLUS, EQS.X3, EQS.CLOSE_PARENTHESIS]);
 _eq_idx++;
-generate_equation(_eq_idx, [EQS.FOUR, EQS.COSINE, EQS.X1]);
-_eq_idx++;
-
-// vx = 4sin(x)
-// vy = 4cos(y)
-generate_equation(_eq_idx, [EQS.FOUR, EQS.SINE, EQS.X1]);
-_eq_idx++;
-generate_equation(_eq_idx, [EQS.FOUR, EQS.COSINE, EQS.X2]);
+generate_equation(_eq_idx, [EQS.FOUR, EQS.COSINE, EQS.OPEN_PARENTHESIS, EQS.X1, EQS.PLUS, EQS.X3, EQS.CLOSE_PARENTHESIS]);
 _eq_idx++;
 
-// vx = 4sin(x)
-// vy = 4cos(x)
-generate_equation(_eq_idx, [EQS.FOUR, EQS.SINE, EQS.X1]);
+// vx = 4sin(x+t)
+// vy = 4cos(y+t)
+generate_equation(_eq_idx, [EQS.FOUR, EQS.SINE, EQS.OPEN_PARENTHESIS, EQS.X1, EQS.PLUS, EQS.X3, EQS.CLOSE_PARENTHESIS]);
 _eq_idx++;
-generate_equation(_eq_idx, [EQS.FOUR, EQS.COSINE, EQS.X1]);
+generate_equation(_eq_idx, [EQS.FOUR, EQS.COSINE, EQS.OPEN_PARENTHESIS, EQS.X2, EQS.PLUS, EQS.X3, EQS.CLOSE_PARENTHESIS]);
 _eq_idx++;
 
-// vx = x + y
-// vy = x + y
-generate_equation(_eq_idx, [EQS.X1, EQS.PLUS, EQS.X2]);
+// vx = 4sin(x+t)
+// vy = 4cos(x+t)
+generate_equation(_eq_idx, [EQS.FOUR, EQS.SINE, EQS.OPEN_PARENTHESIS, EQS.X1, EQS.PLUS, EQS.X3, EQS.CLOSE_PARENTHESIS]);
 _eq_idx++;
-generate_equation(_eq_idx, [EQS.X1, EQS.PLUS, EQS.X2]);
+generate_equation(_eq_idx, [EQS.FOUR, EQS.COSINE, EQS.OPEN_PARENTHESIS, EQS.X1, EQS.PLUS, EQS.X3, EQS.CLOSE_PARENTHESIS]);
 _eq_idx++;
 
 generate_plot(eq_idx);

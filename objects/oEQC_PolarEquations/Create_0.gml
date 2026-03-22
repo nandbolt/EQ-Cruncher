@@ -99,7 +99,7 @@ _eq_idx++;
 generate_equation(_eq_idx, [EQS.X1, EQS.MOD, EQS.TWO]);
 _eq_idx++;
 
-// r = abs(theta)
+// r = |theta|
 generate_equation(_eq_idx, [EQS.ABSOLUTE_VALUE, EQS.X1]);
 _eq_idx++;
 
