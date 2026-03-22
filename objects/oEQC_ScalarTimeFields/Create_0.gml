@@ -1,12 +1,12 @@
-/// @desc Scalar Fields Demo
+/// @desc Scalar Time Fields Demo
 
 /*
  * This demo showcases how to utilize expressions to make scalar fields.
 */
 event_inherited();
 
-demo_name = "scalar fields";
-output_string = "z = f(x,y)";
+demo_name = "scalar time fields";
+output_string = "z = f(x,y,t)";
 
 zs = [];
 zmin = 0;

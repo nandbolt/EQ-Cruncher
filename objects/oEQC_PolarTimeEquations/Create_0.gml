@@ -1,4 +1,4 @@
-/// @desc Polar Equations Demo
+/// @desc Polar Time Equations Demo
 
 /*
  * This demo showcases how to utilize expressions to plot polar equations.
@@ -6,8 +6,8 @@
 */
 event_inherited();
 
-demo_name = "polar equations";
-output_string = "r = f(theta)";
+demo_name = "polar time equations";
+output_string = "r = f(theta, t)";
 
 thetas = [];
 rs = [];

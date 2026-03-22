@@ -1,4 +1,4 @@
-/// @desc Time Equations Demo
+/// @desc Basic Time Equations Demo
 
 /*
  * This demo showcases how to utilize expressions to make use of time
@@ -6,7 +6,7 @@
 */
 event_inherited();
 
-demo_name = "time equations";
+demo_name = "basic time equations";
 output_string = "y = f(x,t)";
 
 time = 0;

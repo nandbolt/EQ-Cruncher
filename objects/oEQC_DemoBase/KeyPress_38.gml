@@ -1,7 +1,7 @@
 /// @desc Next Demo
 if (room == room_last)
 {
-    room_goto(rEQC_BasicEquationsDemo);
+    room_goto(room_first);
 }
 else
 {

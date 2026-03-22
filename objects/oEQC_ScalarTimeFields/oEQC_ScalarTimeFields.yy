@@ -1,18 +1,16 @@
 {
   "$GMObject":"",
-  "%Name":"oEQC_TimeEquations",
+  "%Name":"oEQC_ScalarTimeFields",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":64,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"oEQC_TimeEquations",
+  "name":"oEQC_ScalarTimeFields",
   "overriddenProperties":[],
   "parent":{
-    "name":"time equations",
-    "path":"folders/nb extensions/demos/EQ Cruncher/time equations.yy",
+    "name":"scalar time equations",
+    "path":"folders/nb extensions/demos/EQ Cruncher/scalar time equations.yy",
   },
   "parentObjectId":{
     "name":"oEQC_DemoBase",
