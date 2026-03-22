@@ -10,6 +10,7 @@ demo_name = "demo";
 eqs = [];
 eq_strs = [];
 eq_idx = 0;
+eq_spacing_idx = 1;
 
 // Points
 xs = [];        // The x-coordinates of the current equation (1D Array)
@@ -20,7 +21,7 @@ for (var _i = point_count - 1; _i > -1; _i--)
 {
     xs[_i] = _i * plot_resolution;
 }
-point_radius = 1;
+point_radius = 2;
 point_color = c_lime;
 
 // Axes
@@ -34,6 +35,7 @@ axes_color = c_gray;
 xmargin = 16;
 ymargin = 8;
 output_string = "y";
+eq_ytextcursor = ymargin;
 
 #region Axes
 

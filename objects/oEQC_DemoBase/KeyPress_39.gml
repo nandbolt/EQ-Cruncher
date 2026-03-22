@@ -1,5 +1,5 @@
 /// @desc Next Plot
-eq_idx++;
+eq_idx += eq_spacing_idx;
 if (eq_idx >= array_length(eqs))
 {
     eq_idx = 0;
