@@ -9,6 +9,8 @@ event_inherited();
 demo_name = "basic equations";
 output_string = "y = f(x)";
 
+#region Point Generation
+
 /// @func   post_process_equation_string(eq_idx);
 /// @desc Adds some post-processing to the equation's string if wanted.
 post_process_equation_string = function(_eq_idx)
@@ -16,56 +18,58 @@ post_process_equation_string = function(_eq_idx)
     eq_strs[_eq_idx] = string_replace_all(eq_strs[_eq_idx], "x1", "x");
 }
 
+#endregion
+
 var _eq_idx = 0;
 
-// f(x) = 0
-generate_equation(_eq_idx, [EQS.ZERO]);
+// y = 0
+generate_equation(_eq_idx, [EQS.ONE]);
 _eq_idx++;
 
-// f(x) = x
+// y = x
 generate_equation(_eq_idx, [EQS.X1]);
 _eq_idx++;
 
-// f(x) = x^2
+// y = x^2
 generate_equation(_eq_idx, [EQS.X1, EQS.POWER, EQS.TWO]);
 _eq_idx++;
 
-// f(x) = x^3
+// y = x^3
 generate_equation(_eq_idx, [EQS.X1, EQS.POWER, EQS.THREE]);
 _eq_idx++;
 
-// f(x) = 1 / x
+// y = 1 / x
 generate_equation(_eq_idx, [EQS.ONE, EQS.DIVIDE, EQS.X1]);
 _eq_idx++;
 
-// f(x) = sqrt(x)
+// y = sqrt(x)
 generate_equation(_eq_idx, [EQS.ROOT, EQS.X1]);
 _eq_idx++;
 
-// f(x) = log10(x)
+// y = log10(x)
 generate_equation(_eq_idx, [EQS.LOG, EQS.X1]);
 _eq_idx++;
 
-// f(x) = sin(x)
+// y = sin(x)
 generate_equation(_eq_idx, [EQS.SINE, EQS.X1]);
 _eq_idx++;
 
-// f(x) = cos(x)
+// y = cos(x)
 generate_equation(_eq_idx, [EQS.COSINE, EQS.X1]);
 _eq_idx++;
 
-// f(x) = tan(x)
+// y = tan(x)
 generate_equation(_eq_idx, [EQS.TANGENT, EQS.X1]);
 _eq_idx++;
 
-// f(x) = x mod 2
+// y = x mod 2
 generate_equation(_eq_idx, [EQS.X1, EQS.MOD, EQS.TWO]);
 _eq_idx++;
 
-// f(x) = abs(x)
+// y = abs(x)
 generate_equation(_eq_idx, [EQS.ABSOLUTE_VALUE, EQS.X1]);
 _eq_idx++;
 
-// f(x) = round(x)
+// y = round(x)
 generate_equation(_eq_idx, [EQS.ROUND, EQS.X1]);
 _eq_idx++;

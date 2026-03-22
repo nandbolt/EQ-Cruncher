@@ -13,13 +13,16 @@ time = 0;
 
 #region Point Generation
 
-/// @func   generate_ys(xs, ys, expression);
-/// @param {Array<Real>} xs The array of x-coordinates to use
-/// @param {Array<Real>} ys The array of y-coordinates to fill (empty)
-/// @param {Struct.Expression} expression The expression to generate the y-coordinates
-/// @desc Generates all of the given y-coordinates based on the given x-coordinates and expression
-generate_ys = function(_xs, _ys, _expression)
+/// @func   generate_plot(eq_idx);
+/// @param {Real} eq_idx The equation index
+/// @desc Generates a plot for the given equation index.
+generate_plot = function(_eq_idx)
 {
+    var _xs = [], _ys = [];
+    xs[_eq_idx] = _xs;
+    ys[_eq_idx] = _ys;
+    var _expression = eqs[_eq_idx];
+    
     for (var _i = 0; _i < point_count; _i++)
     {
         var _x = _i * plot_resolution;
@@ -58,10 +61,10 @@ on_plot_changed = function()
 
 var _eq_idx = 0;
 
-// f(x,t) = sin(x + t)
+// y = sin(x + t)
 generate_equation(_eq_idx, [EQS.SINE, EQS.OPEN_PARENTHESIS, EQS.X1, EQS.PLUS, EQS.X2, EQS.CLOSE_PARENTHESIS]);
 _eq_idx++;
 
-// f(x,t) = tx^2
+// y = tx^2
 generate_equation(_eq_idx, [EQS.X2, EQS.X1, EQS.POWER, EQS.TWO]);
 _eq_idx++;
