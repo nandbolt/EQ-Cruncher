@@ -52,6 +52,7 @@
     {"id":{"name":"rEQC_VectorFieldsDemo","path":"rooms/rEQC_VectorFieldsDemo/rEQC_VectorFieldsDemo.yy",},},
     {"id":{"name":"rEQC_VectorTimeFieldsDemo","path":"rooms/rEQC_VectorTimeFieldsDemo/rEQC_VectorTimeFieldsDemo.yy",},},
     {"id":{"name":"scrEQC_BinaryTreeStruct","path":"scripts/scrEQC_BinaryTreeStruct/scrEQC_BinaryTreeStruct.yy",},},
+    {"id":{"name":"scrEQC_DemoGlobals","path":"scripts/scrEQC_DemoGlobals/scrEQC_DemoGlobals.yy",},},
     {"id":{"name":"scrEQC_Enums","path":"scripts/scrEQC_Enums/scrEQC_Enums.yy",},},
     {"id":{"name":"scrEQC_ExpressionStruct","path":"scripts/scrEQC_ExpressionStruct/scrEQC_ExpressionStruct.yy",},},
   ],
