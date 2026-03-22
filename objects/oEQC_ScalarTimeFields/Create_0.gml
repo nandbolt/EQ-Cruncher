@@ -13,8 +13,8 @@ zmin = 0;
 zmax = 0;
 min_hue = 0;
 max_hue = 255;
-plot_resolution = 16;
-point_radius = 2;
+plot_resolution = 32;
+point_radius = 4;
 start_x = xorigin - floor(room_width * 0.5 / plot_resolution) * plot_resolution;
 start_y = yorigin - floor(room_height * 0.5 / plot_resolution) * plot_resolution;
 var _i = 0;
@@ -42,7 +42,7 @@ generate_plot = function(_eq_idx)
     {
         var _local_x = transform_to_local(xs[_i], xorigin, local_xscale);
         var _local_y = transform_to_local(ys[_i], yorigin, local_yscale);
-        var _local_z = _expression.evaluate([_local_x, _local_y]);
+        var _local_z = _expression.evaluate([_local_x, _local_y, time]);
         zs[_i] = _local_z;
     }
     
@@ -82,6 +82,7 @@ post_process_equation_string = function(_eq_idx)
 {
     eq_strs[_eq_idx] = string_replace_all(eq_strs[_eq_idx], "x1", "x");
     eq_strs[_eq_idx] = string_replace_all(eq_strs[_eq_idx], "x2", "y");
+    eq_strs[_eq_idx] = string_replace_all(eq_strs[_eq_idx], "x3", "t");
 }
 
 #endregion
@@ -109,28 +110,16 @@ draw_plot_segment = function(_x, _y, _idx)
 
 var _eq_idx = 0;
 
-// z = 1
-generate_equation(_eq_idx, [EQS.ONE]);
-_eq_idx++;
-
-// z = x + y
-generate_equation(_eq_idx, [EQS.X1, EQS.PLUS, EQS.X2]);
+// z = sin(x + t) + cos(y + t)
+generate_equation(_eq_idx, [EQS.SINE, EQS.OPEN_PARENTHESIS, EQS.X1, EQS.PLUS, EQS.X3, EQS.CLOSE_PARENTHESIS, EQS.PLUS, EQS.COSINE, EQS.OPEN_PARENTHESIS, EQS.X2, EQS.PLUS, EQS.X3, EQS.CLOSE_PARENTHESIS]);
 _eq_idx++;
 
 // z = sqrt(x^2 + y^2)
-generate_equation(_eq_idx, [EQS.ROOT, EQS.OPEN_PARENTHESIS, EQS.X1, EQS.POWER, EQS.TWO, EQS.PLUS, EQS.X2, EQS.POWER, EQS.TWO, EQS.CLOSE_PARENTHESIS]);
+generate_equation(_eq_idx, [EQS.ROOT, EQS.OPEN_PARENTHESIS, EQS.X3, EQS.X1, EQS.POWER, EQS.TWO, EQS.MINUS, EQS.NINE, EQS.X2, EQS.POWER, EQS.TWO, EQS.CLOSE_PARENTHESIS]);
 _eq_idx++;
 
-// z = sin(x) + cos(y)
-generate_equation(_eq_idx, [EQS.SINE, EQS.X1, EQS.PLUS, EQS.COSINE, EQS.X2]);
-_eq_idx++;
-
-// z = sin(x)
-generate_equation(_eq_idx, [EQS.SINE, EQS.X1]);
-_eq_idx++;
-
-// z = 1 / (x + y)
-generate_equation(_eq_idx, [EQS.ONE, EQS.DIVIDE, EQS.OPEN_PARENTHESIS, EQS.X1, EQS.PLUS, EQS.X2, EQS.CLOSE_PARENTHESIS]);
+// z = sqrt(x^2 + y^2)
+generate_equation(_eq_idx, [EQS.OPEN_PARENTHESIS, EQS.ABSOLUTE_VALUE, EQS.OPEN_PARENTHESIS, EQS.X1, EQS.CLOSE_PARENTHESIS, EQS.CLOSE_PARENTHESIS, EQS.POWER, EQS.X3]);
 _eq_idx++;
 
 generate_plot(eq_idx);
