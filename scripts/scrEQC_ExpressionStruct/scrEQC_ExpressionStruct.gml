@@ -1,5 +1,5 @@
 /*
- * EQ Cruncher - An equation evaluator for GameMaker.
+ * EQ Cruncher (v1.0.0) - An equation evaluator for GameMaker.
  * 
  * created by nandbolt
  * 
