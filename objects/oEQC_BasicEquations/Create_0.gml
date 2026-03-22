@@ -22,7 +22,7 @@ post_process_equation_string = function(_eq_idx)
 
 var _eq_idx = 0;
 
-// y = 0
+// y = 1
 generate_equation(_eq_idx, [EQS.ONE]);
 _eq_idx++;
 
@@ -73,3 +73,5 @@ _eq_idx++;
 // y = round(x)
 generate_equation(_eq_idx, [EQS.ROUND, EQS.X1]);
 _eq_idx++;
+
+generate_plot(eq_idx);

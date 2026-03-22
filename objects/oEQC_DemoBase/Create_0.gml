@@ -6,25 +6,29 @@
 
 demo_name = "demo";
 
-plot_resolution = 8;
-point_radius = 1;
-point_color = c_lime;
-axes_color = c_gray;
+// Equations
 eqs = [];
 eq_strs = [];
 eq_idx = 0;
-xs = [];
-ys = [];
+
+// Points
+xs = [];        // The x-coordinates of the current equation (1D Array)
+ys = [];        // The y-coordinates of the current equation (1D Array)
+plot_resolution = 8;
 point_count = ceil((room_width + plot_resolution) / plot_resolution);
 for (var _i = point_count - 1; _i > -1; _i--)
 {
     xs[_i] = _i * plot_resolution;
 }
+point_radius = 1;
+point_color = c_lime;
 
+// Axes
 xorigin = room_width * 0.5;
 yorigin = room_height * 0.5;
 local_xscale = 64;
 local_yscale = -64;
+axes_color = c_gray;
 
 // GUI
 xmargin = 16;
@@ -88,23 +92,17 @@ transform_to_global = function(_local_coordinate, _origin, _scale)
 /// @desc Generates a plot for the given equation index.
 generate_plot = function(_eq_idx)
 {
-    var _xs = [], _ys = [];
-    xs[_eq_idx] = _xs;
-    ys[_eq_idx] = _ys;
     var _expression = eqs[_eq_idx];
-    
     for (var _i = 0; _i < point_count; _i++)
     {
-        var _x = _i * plot_resolution;
-        _xs[_i] = _x;
-        var _local_x = transform_to_local(_x, xorigin, local_xscale);
+        var _local_x = transform_to_local(xs[_i], xorigin, local_xscale);
         var _local_y = _expression.evaluate([_local_x]);
         var _y = _local_y;
         if (!is_string(_local_y))
         {
             _y = transform_to_global(_local_y, yorigin, local_yscale);
         }
-        _ys[_i] = _y;
+        ys[_i] = _y;
     }
 }
 
@@ -118,7 +116,6 @@ generate_equation = function(_eq_idx, _symbols)
     eqs[_eq_idx].set(_symbols);
     eq_strs[_eq_idx] = $"{output_string} = {string(eqs[_eq_idx])}";
     post_process_equation_string(_eq_idx);
-    generate_plot(_eq_idx);
 }
 
 /// @func   post_process_equation_string(eq_idx);
@@ -136,15 +133,24 @@ draw_plot = function()
     draw_set_colour(point_color);
     for (var _i = 0; _i < point_count; _i++)
     {
-        var _x = xs[eq_idx][_i], _y = ys[eq_idx][_i];
+        var _x = xs[_i], _y = ys[_i];
         if (is_string(_x) || is_string(_y))
         {
             continue;
         }
-        
-        draw_circle(_x, _y, point_radius, false);
+        draw_plot_segment(_x, _y, _i);
     }
     draw_set_colour(c_white);
+}
+
+/// @func   draw_plot_segment(x, y, idx);
+/// @param {Real} x
+/// @param {Real} y
+/// @param {Real} idx The current point index
+/// @desc Draws a segment of the plot.
+draw_plot_segment = function(_x, _y, _idx)
+{
+    draw_circle(_x, _y, point_radius, false);
 }
 
 /// @func   on_plot_changed();

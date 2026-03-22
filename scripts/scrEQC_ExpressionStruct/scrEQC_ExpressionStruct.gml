@@ -632,7 +632,21 @@ function Expression() constructor
         }
         catch (_exception)
         {
-        	_value = _exception;
+            if (is_struct(_exception))
+            {
+                if (variable_struct_exists(_exception, "message"))
+                {
+                    _value = _exception.message;
+                }
+                else
+                {
+                	_value = "Evaluation error: unknown!";
+                }
+            }
+            else
+            {
+            	_value = _exception;
+            }
         }
         
         return _value;

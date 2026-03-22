@@ -18,15 +18,11 @@ time = 0;
 /// @desc Generates a plot for the given equation index.
 generate_plot = function(_eq_idx)
 {
-    var _xs = [], _ys = [];
-    xs[_eq_idx] = _xs;
-    ys[_eq_idx] = _ys;
     var _expression = eqs[_eq_idx];
-    
     for (var _i = 0; _i < point_count; _i++)
     {
         var _x = _i * plot_resolution;
-        _xs[_i] = _x;
+        xs[_i] = _x;
         var _local_x = transform_to_local(_x, xorigin, local_xscale);
         var _local_y = _expression.evaluate([_local_x, time]);
         var _y = _local_y;
@@ -34,7 +30,7 @@ generate_plot = function(_eq_idx)
         {
             _y = transform_to_global(_local_y, yorigin, local_yscale);
         }
-        _ys[_i] = _y;
+        ys[_i] = _y;
     }
 }
 

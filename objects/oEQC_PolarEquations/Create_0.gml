@@ -1,7 +1,7 @@
 /// @desc Basic Equations Demo
 
 /*
- * This demo showcases how to utilize expressions to make basic scatter plots.
+ * This demo showcases how to utilize expressions to plot polar equations.
  * All of the operators are showcased with their parent (or parent-like) functions.
 */
 event_inherited();
@@ -16,6 +16,8 @@ plot_resolution = 2 * pi / 64;
 for (var _i = point_count - 1; _i > -1; _i--)
 {
     thetas[_i] = _i * plot_resolution;
+    xs[_i] = 0;
+    ys[_i] = 0;
 }
 
 #region Point Generation
@@ -25,19 +27,11 @@ for (var _i = point_count - 1; _i > -1; _i--)
 /// @desc Generates a plot for the given equation index.
 generate_plot = function(_eq_idx)
 {
-    var _xs = [], _ys = [];
-    xs[_eq_idx] = _xs;
-    ys[_eq_idx] = _ys;
     var _expression = eqs[_eq_idx];
-    
-    var _thetas = [], _rs = [];
-    thetas[_eq_idx] = _thetas;
-    rs[_eq_idx] = _rs;
-    
     for (var _i = 0; _i < point_count; _i++)
     {
         var _theta = _i * plot_resolution;
-        _thetas[_i] = _theta;
+        thetas[_i] = _theta;
         var _r = _expression.evaluate([_theta]);
         var _local_x = 0, _local_y = 0;
         if (!is_string(_r))
@@ -45,8 +39,8 @@ generate_plot = function(_eq_idx)
             _local_x = cos(_theta) * _r;
             _local_y = sin(_theta) * _r;
         }
-        _xs[_i] = transform_to_global(_local_x, xorigin, local_xscale);
-        _ys[_i] = transform_to_global(_local_y, yorigin, local_yscale);
+        xs[_i] = transform_to_global(_local_x, xorigin, local_xscale);
+        ys[_i] = transform_to_global(_local_y, yorigin, local_yscale);
     }
 }
 
@@ -112,3 +106,5 @@ _eq_idx++;
 // r = round(theta)
 generate_equation(_eq_idx, [EQS.ROUND, EQS.X1]);
 _eq_idx++;
+
+generate_plot(eq_idx);
