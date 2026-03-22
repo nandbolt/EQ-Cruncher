@@ -5,6 +5,7 @@
 */
 
 demo_name = "demo";
+time = 0;
 
 // Equations
 eqs = [];
@@ -157,7 +158,10 @@ draw_plot_segment = function(_x, _y, _idx)
 
 /// @func   on_plot_changed();
 /// @desc Called whenever a plot is changed (but not when the demo changes).
-on_plot_changed = function(){}
+on_plot_changed = function()
+{
+    time = 0;
+}
 
 #endregion
 

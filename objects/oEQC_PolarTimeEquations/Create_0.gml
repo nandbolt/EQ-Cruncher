@@ -32,7 +32,7 @@ generate_plot = function(_eq_idx)
     {
         var _theta = _i * plot_resolution;
         thetas[_i] = _theta;
-        var _r = _expression.evaluate([_theta]);
+        var _r = _expression.evaluate([_theta, time]);
         var _local_x = 0, _local_y = 0;
         if (!is_string(_r))
         {
@@ -49,62 +49,43 @@ generate_plot = function(_eq_idx)
 post_process_equation_string = function(_eq_idx)
 {
     eq_strs[_eq_idx] = string_replace_all(eq_strs[_eq_idx], "x1", "theta");
+    eq_strs[_eq_idx] = string_replace_all(eq_strs[_eq_idx], "x2", "t");
 }
 
 #endregion
 
 var _eq_idx = 0;
 
-// r = 0
-generate_equation(_eq_idx, [EQS.ONE]);
+// r = t
+generate_equation(_eq_idx, [EQS.X2]);
 _eq_idx++;
 
-// r = theta
-generate_equation(_eq_idx, [EQS.X1]);
+// r = theta - t
+generate_equation(_eq_idx, [EQS.X1, EQS.MINUS, EQS.X2]);
 _eq_idx++;
 
-// r = theta^2
-generate_equation(_eq_idx, [EQS.X1, EQS.POWER, EQS.TWO]);
+// r = ttheta^2
+generate_equation(_eq_idx, [EQS.X2, EQS.X1, EQS.POWER, EQS.TWO]);
 _eq_idx++;
 
-// r = theta^3
-generate_equation(_eq_idx, [EQS.X1, EQS.POWER, EQS.THREE]);
-_eq_idx++;
-
-// r = 1 / theta
-generate_equation(_eq_idx, [EQS.ONE, EQS.DIVIDE, EQS.X1]);
-_eq_idx++;
-
-// r = sqrt(theta)
-generate_equation(_eq_idx, [EQS.ROOT, EQS.X1]);
-_eq_idx++;
-
-// r = log10(theta)
-generate_equation(_eq_idx, [EQS.LOG, EQS.X1]);
+// r = t / theta
+generate_equation(_eq_idx, [EQS.X2, EQS.DIVIDE, EQS.X1]);
 _eq_idx++;
 
 // r = sin(theta)
-generate_equation(_eq_idx, [EQS.SINE, EQS.X1]);
-_eq_idx++;
-
-// r = cos(theta)
-generate_equation(_eq_idx, [EQS.COSINE, EQS.X1]);
+generate_equation(_eq_idx, [EQS.SINE, EQS.OPEN_PARENTHESIS, EQS.X1, EQS.PLUS, EQS.X2, EQS.CLOSE_PARENTHESIS]);
 _eq_idx++;
 
 // r = tan(theta)
-generate_equation(_eq_idx, [EQS.TANGENT, EQS.X1]);
+generate_equation(_eq_idx, [EQS.TANGENT, EQS.OPEN_PARENTHESIS, EQS.X1, EQS.PLUS, EQS.X2, EQS.CLOSE_PARENTHESIS]);
 _eq_idx++;
 
 // r = theta mod 2
-generate_equation(_eq_idx, [EQS.X1, EQS.MOD, EQS.TWO]);
-_eq_idx++;
-
-// r = abs(theta)
-generate_equation(_eq_idx, [EQS.ABSOLUTE_VALUE, EQS.X1]);
+generate_equation(_eq_idx, [EQS.X1, EQS.MOD, EQS.X2]);
 _eq_idx++;
 
 // r = round(theta)
-generate_equation(_eq_idx, [EQS.ROUND, EQS.X1]);
+generate_equation(_eq_idx, [EQS.ROUND, EQS.OPEN_PARENTHESIS, EQS.X1, EQS.MINUS, EQS.X2, EQS.CLOSE_PARENTHESIS]);
 _eq_idx++;
 
 generate_plot(eq_idx);

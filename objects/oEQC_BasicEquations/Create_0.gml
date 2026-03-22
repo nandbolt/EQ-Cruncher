@@ -46,6 +46,10 @@ _eq_idx++;
 generate_equation(_eq_idx, [EQS.ROOT, EQS.X1]);
 _eq_idx++;
 
+// y = e^x
+generate_equation(_eq_idx, [EQS.E, EQS.POWER, EQS.X1]);
+_eq_idx++;
+
 // y = log10(x)
 generate_equation(_eq_idx, [EQS.LOG, EQS.X1]);
 _eq_idx++;
@@ -72,6 +76,10 @@ _eq_idx++;
 
 // y = round(x)
 generate_equation(_eq_idx, [EQS.ROUND, EQS.X1]);
+_eq_idx++;
+
+// y = 1 / e^(x^2)
+generate_equation(_eq_idx, [EQS.ONE, EQS.DIVIDE, EQS.OPEN_PARENTHESIS, EQS.E, EQS.POWER, EQS.OPEN_PARENTHESIS, EQS.X1, EQS.POWER, EQS.TWO, EQS.CLOSE_PARENTHESIS, EQS.CLOSE_PARENTHESIS]);
 _eq_idx++;
 
 generate_plot(eq_idx);
