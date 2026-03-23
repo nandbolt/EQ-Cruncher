@@ -12,9 +12,10 @@ EQ Cruncher is an equation evaluator for GameMaker Studio 2.3. Crunch basic expr
 https://github.com/nandbolt/EQ-Cruncher/blob/8a4e582ee395c08d432a44a320cc5f4bd0790326/scripts/scrEQC_Enums/scrEQC_Enums.gml#L1-L40
 
 # How to use
-1. Create the expression.
-2. Set the symbols.
-3. Evaluate!
+The core of the extension is the 3 scripts for the Expression, Binary Tree and Enum values. With an expression, you can:
+1. Create it.
+2. Set the symbols for it.
+3. Evaluate it!
 
 https://github.com/nandbolt/EQ-Cruncher/blob/8a4e582ee395c08d432a44a320cc5f4bd0790326/objects/oEQC_DemoBase/Create_0.gml#L112-L122
 
