@@ -1,5 +1,10 @@
 /// @desc Equation + Controls
 
+if (!show_gui)
+{
+    exit;
+}
+
 // Demo
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);

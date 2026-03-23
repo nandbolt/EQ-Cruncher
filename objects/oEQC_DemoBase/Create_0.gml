@@ -31,12 +31,14 @@ yorigin = room_height * 0.5;
 local_xscale = 64;
 local_yscale = -64;
 axes_color = c_gray;
+show_axes = true;
 
 // GUI
 xmargin = 16;
 ymargin = 8;
 output_string = "y";
 eq_ytextcursor = ymargin;
+show_gui = true;
 
 #region Axes
 
@@ -44,6 +46,11 @@ eq_ytextcursor = ymargin;
 /// @desc Draws the axes and some the associated information on them.
 draw_axes = function()
 {
+    if (!show_axes)
+    {
+        return;
+    }
+    
     draw_set_colour(axes_color);
     draw_line(0, yorigin, room_width, yorigin);
     draw_line(xorigin, 0, xorigin, room_height);
