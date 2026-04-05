@@ -14,6 +14,7 @@ function Expression() constructor
     static initialized = false;
     
     symbols = [];
+	symbols_raw = [];		// Unprocessed symbols, mainly used for reference and string output
     postfix_symbols = [];
     static precedence_map = ds_map_create();
     static special_constants_map = ds_map_create();
@@ -91,7 +92,7 @@ function Expression() constructor
     /// @desc Returns a string representation of the expression.
     static toString = function()
     {
-        return symbols_get_string(symbols);
+        return symbols_get_string(symbols_raw);
     }
     
     #endregion
@@ -305,6 +306,7 @@ function Expression() constructor
     static update_symbols = function(_symbols)
     {
         symbols = [];
+		symbols_raw = _symbols;
         var _symbols_copy = [];
         array_copy(_symbols_copy, 0, _symbols, 0, array_length(_symbols));
         add_implied_symbols(_symbols_copy);
