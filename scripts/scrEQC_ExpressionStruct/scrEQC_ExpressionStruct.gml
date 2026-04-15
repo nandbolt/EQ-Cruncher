@@ -32,6 +32,7 @@ function Expression() constructor
     /// @desc Sets the equation using the given symbols.
     static set = function(_symbols)
     {
+        symbols_raw = _symbols;
         error_message = validate(_symbols);
         if (is_valid())
         {
@@ -306,7 +307,6 @@ function Expression() constructor
     static update_symbols = function(_symbols)
     {
         symbols = [];
-		symbols_raw = _symbols;
         var _symbols_copy = [];
         array_copy(_symbols_copy, 0, _symbols, 0, array_length(_symbols));
         add_implied_symbols(_symbols_copy);
